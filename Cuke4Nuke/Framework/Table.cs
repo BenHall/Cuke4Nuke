@@ -40,11 +40,9 @@ namespace Cuke4Nuke.Framework
             }
         }
 
-
-
         public void AssertSameAs(Table expectedTable)
         {
-            throw new TableAssertionException(this, expectedTable);
+            throw new NotImplementedException();
         }
     }
 }
