@@ -5,6 +5,8 @@ using System.Text;
 
 namespace Cuke4Nuke.Framework
 {
+    public delegate void TableDiffEventHandler(object sender, TableDiffEventArgs e);
+
     public class Table
     {
         public List<Dictionary<string, string>> Hashes()
@@ -42,7 +44,17 @@ namespace Cuke4Nuke.Framework
 
         public void AssertSameAs(Table expectedTable)
         {
-            throw new NotImplementedException();
+            OnDiff(new TableDiffEventArgs(this, expectedTable));
+        }
+
+        public event TableDiffEventHandler Diff;
+
+        public virtual void OnDiff(TableDiffEventArgs e)
+        {
+            if (Diff != null)
+            {
+                Diff(this, e);
+            }
         }
     }
 }

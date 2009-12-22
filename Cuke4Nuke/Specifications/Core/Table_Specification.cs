@@ -24,5 +24,24 @@ namespace Cuke4Nuke.Specifications.Core
             Assert.That(hashes[0].Keys, Has.Member("count"));
             Assert.That(hashes[1]["item"], Is.EqualTo("bananas"));
         }
+
+        [Test]
+        public void AssertSameAsShouldRaiseDiffEvent()
+        {
+            Table actualTable = new Table();
+            Table expectedTable = new Table();
+            bool eventRaised = false;
+
+            actualTable.Diff += delegate(object sender, TableDiffEventArgs e)
+            {
+                eventRaised = true;
+                Assert.AreSame(actualTable, e.ActualTable);
+                Assert.AreSame(expectedTable, e.ExpectedTable);
+            };
+
+            actualTable.AssertSameAs(expectedTable);
+
+            Assert.That(eventRaised, "Diff event not raised.");
+        }
     }
 }
