@@ -7,6 +7,7 @@ using Cuke4Nuke.Framework;
 using NUnit.Framework;
 
 using Cuke4Nuke.Core;
+using System.ComponentModel;
 
 namespace Cuke4Nuke.Specifications.Core
 {
@@ -17,6 +18,7 @@ namespace Cuke4Nuke.Specifications.Core
 
         MethodInfo _successMethod;
         MethodInfo _exceptionMethod;
+        MethodInfo _withTableDiffMethod;
         StepDefinition _stepDefinition;
 
         [SetUp]
@@ -24,8 +26,13 @@ namespace Cuke4Nuke.Specifications.Core
         {
             _successMethod = Reflection.GetMethod(typeof(ValidStepDefinitions), "Succeeds");
             _exceptionMethod = Reflection.GetMethod(typeof(ValidStepDefinitions), "ThrowsException");
+            _withTableDiffMethod = Reflection.GetMethod(typeof(ValidStepDefinitions), "WithTableDiff");
 
             _stepDefinition = new StepDefinition(_successMethod);
+
+            // Register TypeConverter for Cuke4Nuke.Framework.Table
+            TypeConverterAttribute attr = new TypeConverterAttribute(typeof(TableConverter));
+            TypeDescriptor.AddAttributes(typeof(Table), new Attribute[] { attr });
         }
 
         [Test]
@@ -171,6 +178,20 @@ namespace Cuke4Nuke.Specifications.Core
             stepDefinition.Invoke(null);
         }
 
+        [Test]
+        public void InvokeWithTableDiffShouldRaiseTableDiffEvent()
+        {
+            bool eventRaised = false;
+            var stepDefinition = new StepDefinition(_withTableDiffMethod);
+            stepDefinition.TableDiff += delegate(object sender, TableDiffEventArgs e)
+            {
+                eventRaised = true;
+            };
+            string tableAsString = "[[\"foo\",\"1\"],[\"bar\",\"2\"]]";
+            stepDefinition.Invoke(null, tableAsString);
+            Assert.That(eventRaised, "TableDiff event not raised.");
+        }
+
         static void AssertMethodIsValid(string methodName)
         {
             var method = GetValidMethod(methodName);
@@ -245,6 +266,14 @@ namespace Cuke4Nuke.Specifications.Core
             [Given("")]
             [Pending]
             public void Pending() { }
+
+            [Then("")]
+            public static void WithTableDiff(Table table)
+            {
+                Table anotherTable = new Table();
+                table.AssertSameAs(anotherTable);
+            }
+
         }
 
         public class InvalidStepDefinitions

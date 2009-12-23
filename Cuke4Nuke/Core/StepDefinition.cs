@@ -60,6 +60,14 @@ namespace Cuke4Nuke.Core
             {
                 TypeConverter converter = TypeDescriptor.GetConverter(parameters[i].ParameterType);
                 typedArgs[i] = converter.ConvertFromString(args[i]);
+
+                if (typedArgs[i].GetType() == typeof(Table))
+                {
+                    ((Table) typedArgs[i]).Diff += delegate(object sender, TableDiffEventArgs e)
+                    {
+                        this.OnTableDiff(e);
+                    };
+                }
             }
 
             object instance = null;
@@ -105,6 +113,16 @@ namespace Cuke4Nuke.Core
                 }
             }
             return arguments;
+        }
+
+        public event TableDiffEventHandler TableDiff;
+
+        public virtual void OnTableDiff(TableDiffEventArgs e)
+        {
+            if (TableDiff != null)
+            {
+                TableDiff(this, e);
+            }
         }
     }
 }
