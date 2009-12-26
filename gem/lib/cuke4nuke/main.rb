@@ -36,11 +36,16 @@ module Cuke4Nuke
     end
 
     def launch_cuke4nuke_process(step_definitions_dll_path)
-      cuke4nuke_server_exe = File.expand_path(File.join(File.dirname(__FILE__), '../../dotnet/Cuke4Nuke.Server.exe'))
-      command = %{"#{cuke4nuke_server_exe}" -a "#{step_definitions_dll_path}"}
+	  command = %{"#{cuke4nuke_server_exe}" -a "#{step_definitions_dll_path}"}
       process = IO.popen(command, 'r')
       @cuke4nuke_server_pid = process.pid
     end
+
+	def cuke4nuke_server_exe()
+		exe = File.expand_path(File.join(File.dirname(__FILE__), '../../dotnet/Cuke4Nuke.Server.exe'))
+      	exe = %{"mono #{exe}"} if RUBY_PLATFORM =~ /darwin/
+		return exe
+	end
 
     def kill_cuke4nuke_process
       Process.kill(9, @cuke4nuke_server_pid)
