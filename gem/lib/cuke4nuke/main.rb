@@ -2,7 +2,11 @@
 
 require 'rubygems'
 require 'systemu'
-require 'win32/process'
+begin 
+	require 'win32/process'
+rescue LoadError
+  $stderr.puts 'Failed to load win32/process'
+end
 
 module Cuke4Nuke
   class Main

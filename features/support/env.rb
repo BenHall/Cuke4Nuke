@@ -3,7 +3,11 @@ require 'tempfile'
 require 'spec/expectations'
 require 'fileutils'
 require 'forwardable'
-require 'win32/process'
+begin 
+	require 'win32/process'
+rescue LoadError
+  $stderr.puts 'Failed to load win32/process'
+end
 require 'erb'
 
 class CucumberWorld

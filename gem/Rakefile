@@ -13,10 +13,8 @@ begin
     gem.executables = ["cuke4nuke"]
     
     gem.add_dependency "cucumber", ">=0.5.1"
-    gem.add_dependency "win32-process", ">=0.6.1"
     gem.add_dependency "systemu", ">=1.2.0"
     gem.add_dependency "json", ">=1.2.0"
-    gem.add_dependency "win32console", ">=1.2.0"
 
     gem.files += FileList['dotnet/*.{dll,exe,config}']
     gem.test_files = []
