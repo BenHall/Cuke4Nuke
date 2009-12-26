@@ -43,8 +43,16 @@ module Cuke4Nuke
 
 	def cuke4nuke_server_exe()
 		exe = File.expand_path(File.join(File.dirname(__FILE__), '../../dotnet/Cuke4Nuke.Server.exe'))
-      	exe = %{"mono #{exe}"} if RUBY_PLATFORM =~ /darwin/
+      	exe = %{"mono #{exe}"} if running_on_osx? && mono_installed?
 		return exe
+	end
+	
+	def running_on_osx?()
+		RUBY_PLATFORM =~ /darwin/ 
+	end
+	
+	def mono_installed?()
+		system('which mono >> /dev/null')
 	end
 
     def kill_cuke4nuke_process
