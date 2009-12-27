@@ -14,6 +14,14 @@ task :test do
   sh %{"#{nunit}" "#{tests}"}
 end
 
+desc "Build the C# code with xBuild on Mono"
+task :mono do
+  xbuild = 'xBuild'
+  solution = File.expand_path(File.dirname(__FILE__) + '/Cuke4Nuke/Cuke4Nuke.sln')
+  sh %{#{xbuild} "#{solution}" /p:configuration=Release}
+end
+
+
 task :log => 'log:less'
 
 namespace :log do
