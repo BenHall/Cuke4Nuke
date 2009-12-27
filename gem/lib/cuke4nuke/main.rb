@@ -3,7 +3,7 @@
 require 'rubygems'
 require 'systemu'
 begin 
-	require 'win32/process'
+  require 'win32/process'
 rescue LoadError
   $stderr.puts 'Failed to load win32/process'
 end
@@ -42,17 +42,17 @@ module Cuke4Nuke
     end
 
 	def cuke4nuke_server_exe()
-		exe = File.expand_path(File.join(File.dirname(__FILE__), '../../dotnet/Cuke4Nuke.Server.exe'))
-      	exe = %{"mono #{exe}"} if running_on_osx? && mono_installed?
-		return exe
+	  exe = File.expand_path(File.join(File.dirname(__FILE__), '../../dotnet/Cuke4Nuke.Server.exe'))
+      exe = %{"mono #{exe}"} if running_on_osx? && mono_installed?
+	  return exe
 	end
 	
 	def running_on_osx?()
-		RUBY_PLATFORM =~ /darwin/ 
+	  RUBY_PLATFORM =~ /darwin/ 
 	end
 	
 	def mono_installed?()
-		system('which mono >> /dev/null')
+	  system('which mono >> /dev/null')
 	end
 
     def kill_cuke4nuke_process
